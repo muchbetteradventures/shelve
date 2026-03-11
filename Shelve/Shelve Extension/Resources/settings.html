@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+            width: 400px;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+        h1 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+        .field {
+            margin-bottom: 16px;
+        }
+        .field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .field input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #333;
+            border-radius: 6px;
+            background: #2a2a2a;
+            color: #e0e0e0;
+            font-size: 13px;
+            font-family: inherit;
+        }
+        .field input:focus {
+            outline: none;
+            border-color: #0a84ff;
+        }
+        .field .hint {
+            font-size: 11px;
+            color: #666;
+            margin-top: 4px;
+        }
+        .actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .save-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 6px;
+            background: #0a84ff;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .save-btn:hover { background: #0070e0; }
+        .test-btn {
+            padding: 8px 16px;
+            border: 1px solid #444;
+            border-radius: 6px;
+            background: transparent;
+            color: #e0e0e0;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .test-btn:hover { border-color: #666; }
+        .status {
+            font-size: 12px;
+            margin-left: 8px;
+        }
+        .status.ok { color: #34c759; }
+        .status.fail { color: #ff3b30; }
+        .status.hidden { display: none; }
+
+        h2 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #888;
+            margin-top: 24px;
+            margin-bottom: 8px;
+        }
+        .api-info {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .api-info code {
+            background: #2a2a2a;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <h1>Shelve Settings</h1>
+
+    <div class="field">
+        <label>API Endpoint</label>
+        <input type="text" id="apiBase" placeholder="http://localhost:9876">
+        <div class="hint">The base URL of your local API server</div>
+    </div>
+
+    <div class="actions">
+        <button class="save-btn" id="saveBtn">Save</button>
+        <button class="test-btn" id="testBtn">Test Connection</button>
+        <span class="status hidden" id="status"></span>
+    </div>
+
+    <h2>API Contract</h2>
+    <div class="api-info">
+        Shelve expects two endpoints on your server:<br><br>
+        <code>GET /api/status</code> &mdash; health check, should return <code>{"status": "ok"}</code><br><br>
+        <code>POST /api/import</code> &mdash; receives JSON:<br>
+        <code>{"url", "title", "selection", "referrer", "tags", "annotation"}</code>
+    </div>
+
+    <script src="settings.js"></script>
+</body>
+</html>

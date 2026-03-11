@@ -1,0 +1,4 @@
+build/
+Shelve/Shelve.xcodeproj/
+DerivedData/
+.DS_Store

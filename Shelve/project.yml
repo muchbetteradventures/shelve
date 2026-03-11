@@ -1,0 +1,42 @@
+name: Shelve
+options:
+  bundleIdPrefix: com.shelve-app
+  deploymentTarget:
+    macOS: "14.0"
+settings:
+  DEVELOPMENT_TEAM: ""
+  CODE_SIGN_STYLE: Automatic
+  GENERATE_INFOPLIST_FILE: YES
+
+targets:
+  Shelve:
+    type: application
+    platform: macOS
+    sources:
+      - Shelve
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.shelve-app.app
+      GENERATE_INFOPLIST_FILE: YES
+      INFOPLIST_VALUES:
+        CFBundleDisplayName: Shelve
+        CFBundleName: Shelve
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+    dependencies:
+      - target: "Shelve Extension"
+
+  Shelve Extension:
+    type: app-extension
+    platform: macOS
+    sources:
+      - "Shelve Extension"
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.shelve-app.app.extension
+      GENERATE_INFOPLIST_FILE: YES
+      INFOPLIST_FILE: "Shelve Extension/Info.plist"
+      INFOPLIST_VALUES:
+        CFBundleDisplayName: "Shelve Extension"
+        CFBundleName: "Shelve Extension"
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+      CODE_SIGN_ENTITLEMENTS: "Shelve Extension/Shelve_Extension.entitlements"
