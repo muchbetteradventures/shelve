@@ -42,13 +42,28 @@ document.addEventListener("DOMContentLoaded", async () => {
         mainContent.style.display = "none";
     }
 
-    // Get page context from content script
+    // Get page context by injecting a script on demand (only when popup is opened)
     try {
         const tabs = await browser.tabs.query({ active: true, currentWindow: true });
         if (tabs[0]) {
-            pageContext = await browser.tabs.sendMessage(tabs[0].id, { action: "getPageContext" });
+            const results = await browser.scripting.executeScript({
+                target: { tabId: tabs[0].id },
+                func: () => ({
+                    url: window.location.href,
+                    title: document.title,
+                    selection: window.getSelection()?.toString()?.substring(0, 500) || "",
+                    referrer: document.referrer,
+                }),
+            });
+            pageContext = results[0]?.result || {
+                url: tabs[0].url,
+                title: tabs[0].title,
+                selection: "",
+                referrer: "",
+            };
         }
     } catch (e) {
+        // Fallback if scripting injection fails (e.g. on privileged pages)
         const tabs = await browser.tabs.query({ active: true, currentWindow: true });
         if (tabs[0]) {
             pageContext = {

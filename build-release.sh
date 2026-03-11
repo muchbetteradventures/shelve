@@ -18,10 +18,15 @@ if [[ -z "${KEYCHAIN_PROFILE:-}" ]]; then
     echo "Error: KEYCHAIN_PROFILE not set in .env"
     exit 1
 fi
+if [[ -z "${TEAM_ID:-}" ]]; then
+    echo "Error: TEAM_ID not set in .env"
+    exit 1
+fi
 
 APP_NAME="Shelve"
 BINARY_NAME="shelve"
 PROJECT_DIR="Shelve"
+BUNDLE_ID="com.muchbetteradventures.shelve.app"
 
 # --- Auto-version from conventional commits ---
 
@@ -51,12 +56,41 @@ esac
 VERSION="${MAJOR}.${MINOR}.${PATCH}"
 echo "==> Version bump: ${CURRENT_VERSION} -> ${VERSION} (${BUMP})"
 
-# Commit version bump and tag
-git add -A
-git commit -m "release: v${VERSION}" --allow-empty
+# Commit any pending changes and tag
+if ! git diff --quiet HEAD 2>/dev/null; then
+    git add .env.example build-release.sh Makefile Shelve/ ExportOptions.plist.template
+    git commit -m "release: v${VERSION}"
+fi
 git tag "v${VERSION}"
 
 echo "==> Tagged v${VERSION}"
+
+# --- Generate ExportOptions.plist from template ---
+
+echo "==> Generating ExportOptions.plist..."
+cat > ExportOptions.plist <<PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>method</key>
+	<string>developer-id</string>
+	<key>teamID</key>
+	<string>${TEAM_ID}</string>
+	<key>signingStyle</key>
+	<string>manual</string>
+	<key>provisioningProfiles</key>
+	<dict>
+		<key>${BUNDLE_ID}</key>
+		<string>Shelve App Provisioning</string>
+		<key>${BUNDLE_ID}.extension</key>
+		<string>Shelve App Extension Provisioning</string>
+	</dict>
+	<key>signingCertificate</key>
+	<string>Developer ID Application</string>
+</dict>
+</plist>
+PLIST
 
 # --- Generate Xcode project ---
 
@@ -75,6 +109,7 @@ xcodebuild -project "${PROJECT_DIR}/${APP_NAME}.xcodeproj" \
     -scheme "${APP_NAME}" \
     -configuration Release \
     -archivePath "${ARCHIVE_PATH}" \
+    DEVELOPMENT_TEAM="${TEAM_ID}" \
     archive
 
 echo "==> Exporting with Developer ID signing..."

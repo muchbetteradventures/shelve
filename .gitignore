@@ -6,3 +6,14 @@ DerivedData/
 .env
 *.dmg
 *.tar.gz
+
+# Generated at build time from .env
+ExportOptions.plist
+
+# Safety net - never commit signing artifacts
+*.provisionprofile
+*.mobileprovision
+*.p12
+*.cer
+*.pem
+*.xcarchive
