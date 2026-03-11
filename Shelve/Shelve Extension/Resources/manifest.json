@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Shelve",
     "description": "Save pages to a local API for research and analysis",
-    "version": "1.0.0",
+    "version": "0.1.2",
     "icons": {
         "48": "icon-48.png",
         "96": "icon-96.png",

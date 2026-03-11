@@ -94,10 +94,16 @@ PLIST
 
 # --- Generate Xcode project ---
 
+echo "==> Injecting TEAM_ID into project.yml..."
+sed -i '' "s/DEVELOPMENT_TEAM: \"\"/DEVELOPMENT_TEAM: \"${TEAM_ID}\"/" "${PROJECT_DIR}/project.yml"
+
 echo "==> Generating Xcode project..."
 cd "${PROJECT_DIR}"
 xcodegen generate
 cd "${SCRIPT_DIR}"
+
+# Restore project.yml (keep team ID out of git)
+sed -i '' "s/DEVELOPMENT_TEAM: \"${TEAM_ID}\"/DEVELOPMENT_TEAM: \"\"/" "${PROJECT_DIR}/project.yml"
 
 # --- Archive & Export (Developer ID) ---
 
