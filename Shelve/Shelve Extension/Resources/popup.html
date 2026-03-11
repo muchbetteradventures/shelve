@@ -147,17 +147,29 @@
             font-size: 13px;
         }
         .offline-msg.hidden { display: none; }
+        .settings-link {
+            color: #888;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            text-decoration: none;
+            padding: 4px;
+        }
+        .settings-link:hover { color: #e0e0e0; }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>Shelve</h1>
-        <div class="status-dot" id="statusDot"></div>
+        <div style="display:flex;align-items:center;gap:8px;">
+            <div class="status-dot" id="statusDot"></div>
+            <a class="settings-link" id="settingsLink" title="Settings">&#x2699;</a>
+        </div>
     </div>
 
     <div class="offline-msg hidden" id="offlineMsg">
         API server is not running.<br>
-        <span style="font-size: 11px; color: #666;">Check Settings to configure the endpoint.</span>
+        <a id="offlineSettingsLink" style="font-size: 11px; color: #0a84ff; cursor: pointer; text-decoration: underline;">Configure API endpoint</a>
     </div>
 
     <div id="mainContent">

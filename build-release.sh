@@ -65,49 +65,30 @@ cd "${PROJECT_DIR}"
 xcodegen generate
 cd "${SCRIPT_DIR}"
 
-# --- Build ---
+# --- Archive & Export (Developer ID) ---
 
-echo "==> Building release..."
+ARCHIVE_PATH=".build/${APP_NAME}.xcarchive"
+EXPORT_DIR=".build/export"
+
+echo "==> Archiving..."
 xcodebuild -project "${PROJECT_DIR}/${APP_NAME}.xcodeproj" \
     -scheme "${APP_NAME}" \
     -configuration Release \
-    -derivedDataPath .build/DerivedData \
-    build
+    -archivePath "${ARCHIVE_PATH}" \
+    archive
 
-APP_PATH=".build/DerivedData/Build/Products/Release/${APP_NAME}.app"
+echo "==> Exporting with Developer ID signing..."
+xcodebuild -exportArchive \
+    -archivePath "${ARCHIVE_PATH}" \
+    -exportPath "${EXPORT_DIR}" \
+    -exportOptionsPlist ExportOptions.plist
+
+APP_PATH="${EXPORT_DIR}/${APP_NAME}.app"
 
 if [[ ! -d "${APP_PATH}" ]]; then
-    echo "Error: Build product not found at ${APP_PATH}"
+    echo "Error: Export product not found at ${APP_PATH}"
     exit 1
 fi
-
-# --- Sign ---
-
-echo "==> Signing with hardened runtime (inside-out)..."
-
-# Sign frameworks first (if any)
-if [ -d "${APP_PATH}/Contents/Frameworks" ]; then
-    echo "  Signing frameworks..."
-    find "${APP_PATH}/Contents/Frameworks" -type f \( -name "*.dylib" -o -name "*.framework" \) -print0 | while IFS= read -r -d '' fw; do
-        codesign --sign "${SIGNING_IDENTITY}" --options runtime --force "$fw"
-    done
-fi
-
-# Sign extension
-echo "  Signing extension..."
-codesign --sign "${SIGNING_IDENTITY}" \
-         --options runtime \
-         --force \
-         --entitlements "${PROJECT_DIR}/Shelve Extension/Shelve_Extension.entitlements" \
-         "${APP_PATH}/Contents/PlugIns/Shelve Extension.appex"
-
-# Sign app
-echo "  Signing app..."
-codesign --sign "${SIGNING_IDENTITY}" \
-         --options runtime \
-         --force \
-         --entitlements "${PROJECT_DIR}/Shelve.entitlements" \
-         "${APP_PATH}"
 
 echo "==> Verifying signature..."
 codesign --verify --verbose --deep "${APP_PATH}"
@@ -133,7 +114,7 @@ echo "==> Signing .dmg..."
 codesign --sign "${SIGNING_IDENTITY}" "${DMG_NAME}"
 
 echo "==> Creating ${TAR_NAME} for Homebrew..."
-tar -czf "${TAR_NAME}" -C ".build/DerivedData/Build/Products/Release" "${APP_NAME}.app"
+tar -czf "${TAR_NAME}" -C "${EXPORT_DIR}" "${APP_NAME}.app"
 
 # --- Notarize ---
 

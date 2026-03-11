@@ -14,6 +14,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const annotationField = document.getElementById("annotation");
     const tagsField = document.getElementById("tags");
 
+    // Settings links
+    document.getElementById("settingsLink").addEventListener("click", () => {
+        browser.runtime.openOptionsPage();
+    });
+    document.getElementById("offlineSettingsLink").addEventListener("click", () => {
+        browser.runtime.openOptionsPage();
+    });
+
     // Check server status
     try {
         const status = await browser.runtime.sendMessage({ action: "checkStatus" });

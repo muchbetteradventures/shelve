@@ -1,11 +1,13 @@
 name: Shelve
 options:
-  bundleIdPrefix: com.shelve-app
+  bundleIdPrefix: com.muchbetteradventures.shelve
   deploymentTarget:
     macOS: "14.0"
 settings:
-  DEVELOPMENT_TEAM: ""
-  CODE_SIGN_STYLE: Automatic
+  DEVELOPMENT_TEAM: TEAM_ID_REDACTED
+  CODE_SIGN_STYLE: Manual
+  CODE_SIGN_IDENTITY: "Developer ID Application"
+  ENABLE_HARDENED_RUNTIME: YES
   GENERATE_INFOPLIST_FILE: YES
 
 targets:
@@ -15,7 +17,9 @@ targets:
     sources:
       - Shelve
     settings:
-      PRODUCT_BUNDLE_IDENTIFIER: com.shelve-app.app
+      PRODUCT_BUNDLE_IDENTIFIER: com.muchbetteradventures.shelve.app
+      PROVISIONING_PROFILE_SPECIFIER: "Shelve App Provisioning"
+      ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
       GENERATE_INFOPLIST_FILE: YES
       INFOPLIST_VALUES:
         CFBundleDisplayName: Shelve
@@ -31,7 +35,8 @@ targets:
     sources:
       - "Shelve Extension"
     settings:
-      PRODUCT_BUNDLE_IDENTIFIER: com.shelve-app.app.extension
+      PRODUCT_BUNDLE_IDENTIFIER: com.muchbetteradventures.shelve.app.extension
+      PROVISIONING_PROFILE_SPECIFIER: "Shelve App Extension Provisioning"
       GENERATE_INFOPLIST_FILE: YES
       INFOPLIST_FILE: "Shelve Extension/Info.plist"
       INFOPLIST_VALUES:
