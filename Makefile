@@ -1,4 +1,4 @@
-.PHONY: generate build install clean
+.PHONY: generate build install clean release
 
 XCODE_PROJECT = Shelve/Shelve.xcodeproj
 BUILD_DIR = build
@@ -13,8 +13,6 @@ build: generate
 		-scheme Shelve \
 		-configuration Release \
 		-derivedDataPath $(BUILD_DIR) \
-		CODE_SIGN_IDENTITY="-" \
-		CODE_SIGNING_ALLOWED=NO \
 		build
 
 install: build
@@ -23,6 +21,9 @@ install: build
 	@echo "Shelve installed to $(INSTALL_DIR)/$(APP_NAME)"
 	@echo "Enable the extension: Safari > Settings > Extensions > Shelve"
 
+release:
+	./build-release.sh
+
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR) .build
 	rm -rf $(XCODE_PROJECT)

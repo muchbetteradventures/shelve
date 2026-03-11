@@ -1,4 +1,8 @@
 build/
+.build/
 Shelve/Shelve.xcodeproj/
 DerivedData/
 .DS_Store
+.env
+*.dmg
+*.tar.gz
