@@ -58,7 +58,7 @@ echo "==> Version bump: ${CURRENT_VERSION} -> ${VERSION} (${BUMP})"
 
 # Commit any pending changes and tag
 if ! git diff --quiet HEAD 2>/dev/null; then
-    git add .env.example build-release.sh Makefile Shelve/ ExportOptions.plist.template
+    git add .env.example build-release.sh Makefile Shelve/
     git commit -m "release: v${VERSION}"
 fi
 git tag "v${VERSION}"

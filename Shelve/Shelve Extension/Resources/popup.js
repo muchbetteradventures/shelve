@@ -102,6 +102,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             referrer: pageContext.referrer || "",
             annotation: annotationField.value.trim(),
             tags: tags,
+            source: "shelve_safari_extension",
         };
 
         try {
